@@ -1,4 +1,4 @@
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'pelizzari2024';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 const PRODUTOS_PADRAO = [
   { id:'copo-tradicional', category:'copo', name:'Salgados no Copo — Tradicional', desc:'Coxinha de frango, kibe e bolinha de queijo.', price:12.00, unit:'por unidade', meta:['3 salgados'], type:'copo_tipo', ativo:true },
@@ -38,12 +38,19 @@ module.exports = async (req, res) => {
   }
 
   if (req.method === 'POST') {
+    if (!ADMIN_PASSWORD) return res.status(500).json({ error: 'ADMIN_PASSWORD não configurado' });
+
     const { senha, produtos } = req.body || {};
+    if (senha !== ADMIN_PASSWORD) return res.status(401).json({ error: 'Senha incorreta' });
+
     try {
       const redis = getRedis();
       await redis.set('produtos', JSON.stringify(produtos));
+      return res.status(200).json({ ok: true });
     } catch(e) {
+      return res.status(500).json({ error: 'Erro ao salvar: ' + e.message });
     }
   }
 
+  return res.status(405).json({ error: 'Método não permitido' });
 };

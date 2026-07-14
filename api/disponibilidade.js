@@ -1,4 +1,4 @@
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'pelizzari2024';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 function getRedis(){
   const { Redis } = require('@upstash/redis');
@@ -23,6 +23,8 @@ module.exports = async (req, res) => {
   }
 
   if (req.method === 'POST') {
+    if (!ADMIN_PASSWORD) return res.status(500).json({ error: 'ADMIN_PASSWORD não configurado' });
+
     const { senha, disponibilidade } = req.body || {};
     if (senha !== ADMIN_PASSWORD) return res.status(401).json({ error: 'Senha incorreta' });
     try {
