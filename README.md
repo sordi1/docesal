@@ -40,14 +40,6 @@ npm install
 vercel dev
 ```
 
-Requer a [Vercel CLI](https://vercel.com/docs/cli) instalada e as variáveis de ambiente configuradas localmente (`vercel env pull` puxa as do projeto já configurado no Vercel).
-
-## Notas de segurança
-
-- Nenhuma chave de API fica no código — todas vêm de variável de ambiente, lida em tempo de execução.
-- `ADMIN_PASSWORD` não tem valor padrão no código: se não estiver configurada, o endpoint responde erro em vez de aceitar qualquer senha.
-- CORS liberado (`Access-Control-Allow-Origin: *`) nos endpoints — adequado para uma API pública de consulta, mas os endpoints de escrita (produtos, disponibilidade) exigem senha independente da origem da requisição.
-
 ## Stack
 
 Node.js (funções serverless) · Vercel · Upstash Redis · API do Google Maps · API do Mercado Pago
